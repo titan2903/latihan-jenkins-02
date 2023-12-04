@@ -60,7 +60,7 @@ pipeline {
             steps {
                 echo "Deploy apps with kubernetes"
                 sh 'helm repo add goapps-charts https://adhithia21.github.io/helm-charts/charts'
-                sh 'helm upgrade --install app goapps-charts/application'
+                sh 'helm upgrade --install goapps goapps-charts/application'
             }
         }
     }
