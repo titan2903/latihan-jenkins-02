@@ -60,7 +60,7 @@ pipeline {
             }
 
             steps {
-                echo 'Connect to GCP'
+                echo 'Connect to access GCP'
                 sh 'ssh -o StrictHostKeyChecking=no -i $JENKINS_AGENT_1 titan@192.168.1.131 "rm -rf ~/gcp-service-account.json"'
                 sh 'scp -o StrictHostKeyChecking=no -i $JENKINS_AGENT_1 $GCR_SERVICE_ACCOUNT titan@192.168.1.131:~/gcp-service-account.json'
                 sh 'ssh -o StrictHostKeyChecking=no -i $JENKINS_AGENT_1 titan@192.168.1.131 "gcloud auth activate-service-account $(cat gcp-service-account.json | jq -r .client_email) --key-file=gcp-service-account.json"'
