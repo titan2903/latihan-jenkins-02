@@ -53,10 +53,14 @@ pipeline {
         }
 
         stage('Deploy') {
+            environment {
+                KUBE_CONFIG = credentials('kube-config')
+            }
+
             steps {
                 echo "Deploy apps with kubernetes"
-                sh 'helm repo add goapps-charts https://github.com/titan2903/helm-chart-sample/charts'
-                sh 'helm install app goapps-charts/application'
+                sh 'helm repo add goapps-charts https://adhithia21.github.io/helm-charts/charts'
+                sh 'helm upgrade --install app goapps-charts/application'
             }
         }
     }
