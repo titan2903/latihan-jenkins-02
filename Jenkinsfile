@@ -1,10 +1,14 @@
 pipeline {
-    agent {
-        label 'sandbox'
-    }
+    agent any
 
     stages {
         stage('Build') {
+            agent {
+                docker {
+                    image 'golang:1.21.4-alpine3.18'
+                    label 'sandbox'
+                }
+            }
             steps {
                 echo "Build Apps"
                 
@@ -17,7 +21,7 @@ pipeline {
                     
             }
         }
-        
+
         stage('Deploy') {
             steps {
                 echo "Deploy Apps"
