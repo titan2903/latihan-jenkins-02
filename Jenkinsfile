@@ -52,11 +52,13 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            // environment {
-            //     KUBE_CONFIG = credentials('kube-config')
-            // }
+        stage ('Connect to GCP') {
+            steps {
+                echo 'Connect to GCP'
+            }
+        }
 
+        stage('Deploy') {
             steps {
                 echo "Deploy apps with kubernetes"
                 sh 'helm repo add goapps-charts https://adhithia21.github.io/helm-charts/charts'
