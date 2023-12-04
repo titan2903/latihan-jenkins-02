@@ -2,6 +2,18 @@ pipeline {
     agent any
 
     stages {
+        stage('Test Goapps'){
+            agent {
+                docker {
+                    image 'golang:1.21.4-alpine3.18'
+                    label 'sandbox'
+                }
+            }
+            steps {
+                echo "Test Golang Apps"
+                sh 'GOCACHE=/tmp/ go test -v ./...'
+            }   
+        }
         stage('Build') {
             agent {
                 docker {
@@ -11,14 +23,7 @@ pipeline {
             }
             steps {
                 echo "Build Apps"
-                
-            }
-        }
-
-        stage('Test'){
-            steps {
-                echo "Test Apps"
-                    
+                sh 'docker build -t goapps:1.0 .'
             }
         }
 
