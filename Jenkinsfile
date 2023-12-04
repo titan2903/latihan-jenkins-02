@@ -45,6 +45,7 @@ pipeline {
                     echo "Post Success"
                     discordSend description: "Jenkins Pipeline Push", footer: "Push Success image goapps:${BUILD_NUMBER}", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
                 }
+
                 failure {
                     echo "Post Failure"
                     discordSend description: "Jenkins Pipeline Push", footer: "Push Failure image goapps:${BUILD_NUMBER}", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
@@ -57,6 +58,7 @@ pipeline {
                 JENKINS_AGENT_1 = credentials('jenkins-agent-1')
                 GCR_SERVICE_ACCOUNT = credentials('gcp-service-account-gcr')
             }
+
             steps {
                 echo 'Connect to GCP'
                 sh 'ssh -o StrictHostKeyChecking=no -i $JENKINS_AGENT_1 titan@192.168.1.131 "rm -rf ~/gcp-service-account.json"'
@@ -81,6 +83,7 @@ pipeline {
             echo "Post Success"
             discordSend description: "Jenkins Pipeline Deploy", footer: "Deploy Success", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
         }
+        
         failure {
             echo "Post Failure"
             discordSend description: "Jenkins Pipeline Deploy", footer: "Deploy Failure", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
