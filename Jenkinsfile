@@ -39,23 +39,34 @@ pipeline {
                 sh 'cat $GCR_SERVICE_ACCOUNT | docker login -u _json_key --password-stdin https://gcr.io'
                 sh 'docker push gcr.io/ancient-alloy-406700/goapps:${BUILD_NUMBER}.0'
             }
+
+            post {
+                success {
+                    echo "Post Success"
+                    discordSend description: "Jenkins Pipeline Push", footer: "Push Success image goapps:${BUILD_NUMBER}.0", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
+                }
+                failure {
+                    echo "Post Failure"
+                    discordSend description: "Jenkins Pipeline Push", footer: "Push Failure image goapps:${BUILD_NUMBER}.0", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
+                }
+            }
         }
 
         stage('Deploy') {
             steps {
                 echo "Deploy Apps"
             }
-        }
-    }
 
-    post {
-        success {
-            echo "Post Success"
-            discordSend description: "Jenkins Pipeline Deploy", footer: "Deploy Success", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
-        }
-        failure {
-            echo "Post Failure"
-            discordSend description: "Jenkins Pipeline Deploy", footer: "Deploy Failure", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
+            post {
+                success {
+                    echo "Post Success"
+                    discordSend description: "Jenkins Pipeline Deploy", footer: "Deploy Success", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
+                }
+                failure {
+                    echo "Post Failure"
+                    discordSend description: "Jenkins Pipeline Deploy", footer: "Deploy Failure", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
+                }
+            }
         }
     }
 }
