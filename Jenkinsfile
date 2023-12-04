@@ -12,7 +12,6 @@ pipeline {
             agent {
                 docker {
                     image 'golang:1.21.4-alpine3.18'
-                    label 'sandbox'
                 }
             }
 
@@ -23,19 +22,16 @@ pipeline {
         }
 
         stage('Build') {
-            agent {
-                label 'sandbox'
-            }
-
             steps {
                 echo "Build Apps"
-                sh 'docker build -t goapps:1.0 .'
+                sh 'docker build -t gcr.io/ancient-alloy-406700/goapps:1.0 .'
             }
         }
 
         stage('Push to GCR') {
             steps {
                 echo "push to google cloud registry"
+                sh 'docker push gcr.io/ancient-alloy-406700/goapps:1.0'
             }
         }
 
