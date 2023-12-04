@@ -30,7 +30,7 @@ FROM alpine:latest
 COPY --from=build /app/goapps .
 
 # Expose port if your application listens on a specific port
-EXPOSE 3000
+EXPOSE 80
 
 # Define the command to run your application
 CMD ["./goapps"]
