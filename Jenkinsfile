@@ -53,9 +53,9 @@ pipeline {
         }
 
         stage('Deploy') {
-            environment {
-                KUBE_CONFIG = credentials('kube-config')
-            }
+            // environment {
+            //     KUBE_CONFIG = credentials('kube-config')
+            // }
 
             steps {
                 echo "Deploy apps with kubernetes"
