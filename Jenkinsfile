@@ -53,8 +53,17 @@ pipeline {
         }
 
         stage ('Connect to GCP') {
+            environment {
+                JENKINS_AGENT_1 = credentials('jenkins-agent-1')
+                GCR_SERVICE_ACCOUNT = credentials('gcp-service-account-gcr')
+            }
             steps {
                 echo 'Connect to GCP'
+                sh 'ssh -o StrictHostKeyChecking=no -i $JENKINS_AGENT_1 titan@192.168.1.131 "rm -rf ~/gcp-service-account.json"'
+                sh 'scp -o StrictHostKeyChecking=no -i $JENKINS_AGENT_1 $GCR_SERVICE_ACCOUNT titan@192.168.1.131:~/gcp-service-account.json'
+                sh 'ssh -o StrictHostKeyChecking=no -i $JENKINS_AGENT_1 titan@192.168.1.131 "gcloud auth activate-service-account $(cat gcp-service-account.json | jq -r .client_email) --key-file=gcp-service-account.json"'
+                sh 'ssh -o StrictHostKeyChecking=no -i $JENKINS_AGENT_1 titan@192.168.1.131 "gcloud auth list"'
+                sh 'ssh -o StrictHostKeyChecking=no -i $JENKINS_AGENT_1 titan@192.168.1.131 "gcloud container clusters get-credentials cluster-jenkins-2 --zone asia-southeast2-a --project ancient-alloy-406700"'
             }
         }
 
