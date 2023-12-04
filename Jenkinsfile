@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        WEBHOOK = credentials('WEBHOOK_URL_DISCORD')
+    }
+
     stages {
         stage('Test Goapps'){
             agent {
@@ -9,18 +13,18 @@ pipeline {
                     label 'sandbox'
                 }
             }
+
             steps {
                 echo "Test Golang Apps"
                 sh 'GOCACHE=/tmp/ go test -v ./...'
             }   
         }
+
         stage('Build') {
             agent {
-                docker {
-                    image 'golang:1.21.4-alpine3.18'
-                    label 'sandbox'
-                }
+                label 'sandbox'
             }
+
             steps {
                 echo "Build Apps"
                 sh 'docker build -t goapps:1.0 .'
@@ -31,6 +35,17 @@ pipeline {
             steps {
                 echo "Deploy Apps"
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Post Success"
+            discordSend description: "Jenkins Pipeline Deploy", footer: "Deploy Success", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
+        }
+        failure {
+            echo "Post Failure"
+            discordSend description: "Jenkins Pipeline Deploy", footer: "Deploy Failure", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "$WEBHOOK"
         }
     }
 }
