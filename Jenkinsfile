@@ -30,8 +30,13 @@ pipeline {
         }
 
         stage('Push to GCR') {
+            environment {
+                GCR_SERVICE_ACCOUNT = credentials('gcp-service-account-gcr')
+            }
+
             steps {
                 echo "push to google cloud registry"
+                sh 'cat $GCR_SERVICE_ACCOUNT | docker login -u _json_key --password-stdin https://gcr.io'
                 sh 'docker push gcr.io/ancient-alloy-406700/goapps:1.0'
             }
         }
