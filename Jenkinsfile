@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'sandbox'
+    }
 
     environment {
         WEBHOOK = credentials('WEBHOOK_URL_DISCORD')
@@ -28,6 +30,12 @@ pipeline {
             steps {
                 echo "Build Apps"
                 sh 'docker build -t goapps:1.0 .'
+            }
+        }
+
+        stage('Push to GCR') {
+            steps {
+                echo "push to google cloud registry"
             }
         }
 
