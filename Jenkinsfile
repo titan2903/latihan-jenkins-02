@@ -54,7 +54,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "Deploy Apps"
+                echo "Deploy apps with kubernetes"
+                sh 'helm repo add goapps-charts https://github.com/titan2903/helm-chart-sample/charts'
+                sh 'helm install app goapps-charts/application'
             }
         }
     }
