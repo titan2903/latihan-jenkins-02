@@ -25,7 +25,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Build Apps"
-                sh 'docker build -t gcr.io/ancient-alloy-406700/goapps:1.0 .'
+                sh 'docker build -t gcr.io/ancient-alloy-406700/goapps:${BUILD_NUMBER}.0 .'
             }
         }
 
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 echo "push to google cloud registry"
                 sh 'cat $GCR_SERVICE_ACCOUNT | docker login -u _json_key --password-stdin https://gcr.io'
-                sh 'docker push gcr.io/ancient-alloy-406700/goapps:1.0'
+                sh 'docker push gcr.io/ancient-alloy-406700/goapps:${BUILD_NUMBER}.0'
             }
         }
 
